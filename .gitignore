@@ -1,0 +1,5 @@
+# precompiled python code
+*.pyc
+
+# roms
+*.gbc

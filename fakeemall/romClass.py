@@ -97,7 +97,7 @@ class Rom(object):
         # Move names data index bounds
         movenamesStart = {'Gold': 0x1B1574,
                           'Silver': 0x1B1574,
-                          'Crystal': 0x1C9f29
+                          'Crystal': 0x1C9F29
                           }.get(self.version)
         movenamesEnd = movenamesStart + maxMoves * lenMovename
         self.pntMovenames = (movenamesStart, movenamesEnd)
@@ -137,8 +137,7 @@ class Rom(object):
         """
         self.updateDatas()
         self.assemblyData()
-        with open(self.outPath, 'wb') as rom:
-            rom.write(self.data)
+        self.writeRom()
 
     def updateDatas(self):
         """
@@ -173,3 +172,10 @@ class Rom(object):
         else:
             newdata += self.data[j:]
         self.data = newdata
+
+    def writeRom(self):
+        """
+        Creates a new .gbc file from the updated self.data attr
+        """
+        with open(self.outPath, 'wb') as rom:
+            rom.write(self.data)

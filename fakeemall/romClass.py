@@ -81,7 +81,7 @@ class Rom(object):
         # Palette data index bounds
         palettesStart = {'Gold': 0xAD45,
                          'Silver': 0xAD45,
-                         'Crystal': 0xAD86
+                         'Crystal': 0xA8D6
                          }.get(self.version)
         palettesEnd = palettesStart + maxPokemon * lenPalette
         self.pntPalettes = (palettesStart, palettesEnd)

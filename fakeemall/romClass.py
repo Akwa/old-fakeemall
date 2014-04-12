@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from constants import *
-from pokemonClass import Pokemon
+from pokemonClass import *
 from re import match
 
 class Rom(object):
@@ -127,7 +127,7 @@ class Rom(object):
         Creates classes from the data blocks, from where
         will be randomized.
         """
-        self.pokemon = Pokemon()
+        self.pokemon = PokemonContainer()
         self.pokemon.extractNames(self.dataNames)
 
     def overwriteRom(self):

@@ -11,6 +11,8 @@ lenName = 10
 lenMovename = 10
 lenTm = 1
 
+bitsPerByte = 8
+
 alph = {
 "\x50": "@",
 "\x54": "#",

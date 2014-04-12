@@ -129,6 +129,7 @@ class Rom(object):
         """
         self.pokemon = PokemonContainer()
         self.pokemon.extractNames(self.dataNames)
+        self.pokemon.extractBasestats(self.dataBasestats)
 
     def overwriteRom(self):
         """

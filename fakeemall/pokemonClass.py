@@ -20,16 +20,11 @@ class PokemonContainer(object):
         From the flat name sequence, extracts 10 bytes per iteration.
         Translates from bytecode to normal letters.
         """
-        null = '\x50'
         for i in xrange(maxPokemon):
             j = i * lenName
             # byteSeq is the sequence of 10 bytes
             byteSeq = data[j:j + lenName]
-            # translate every byte of our sequence if possible
-            # then, ''.join() this list of translated chars
-            name = ''.join([alph[b] for b in byteSeq if b != null])
-            # Assign the name
-            self.pokemon[i].name = name
+            self.pokemon[i].name = processName(byteSeq)
 
     def extractBasestats(self, data):
         """

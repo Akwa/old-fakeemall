@@ -12,6 +12,18 @@ def hexToDec(x):
     """
     return int(x, 16)
 
+def processName(byteSeq):
+    """
+    Translate every byte of our sequence if possible
+    Then, ''.join() this list of translated chars
+    """
+    charList = []
+    for byte in byteSeq:
+        if byte == '\x50': # \x50 terminates name
+            break
+        charList.append(alph[byte])
+    return ''.join(charList)
+
 def processData(byteSeq):
     """
     If input is one byte, outputs its decimal value.

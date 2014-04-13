@@ -165,15 +165,14 @@ class Rom(object):
         allZipped = sorted(zip(allPnts, allDatas))
 
         # Assembly of rom using sorted data
-        newdata = ''
+        newData = []
         k = 0
-        for (i, j), data in allZipped:
-            newdata += self.data[k:i]
-            newdata += data
+        for (i, j), block in allZipped:
+            newData.append(self.data[k:i])
+            newData.append(block)
             k = j
-        else:
-            newdata += self.data[j:]
-        self.data = newdata
+        newData.append(self.data[j:])
+        self.data = ''.join(newData)
 
     def writeRom(self):
         """

@@ -47,9 +47,8 @@ def processTms(byteSeq):
         # bin(int) returns string starting with '0b'
         # tms are put in reversed order, eg. (8, 7, ..., 1)
         # '0b' is cut out and string reversed with [:1:-1]
-        tmByte = bin(tmByte)[:1:-1]
         # extra zeros have to be added if less than 8 digits
-        tmByte = tmByte + '0' * (bitsPerByte - len(tmByte))
+        tmByte = format(tmByte, '#010b')[:1:-1]
         # str to list (eg. '00001111' to [0, 0, 0, 0, 1, 1, 1, 1])
         tmByte = map(int, tmByte)
         tms.extend(tmByte)

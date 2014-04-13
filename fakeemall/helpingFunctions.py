@@ -53,3 +53,29 @@ def processTms(byteSeq):
         tmByte = map(int, tmByte)
         tms.extend(tmByte)
     return tms
+
+def processPalettes(byteSeq):
+    """
+    Changes the 8-byte sequence to list of four lists [R, G, B].
+    Every Pokemon palette data uses 8 bytes:
+    4 for normal palette and 4 for shiny palette.
+    These 4 bytes code 2 colors of every palette.
+    So, 2 bytes (16 bits) denote 1 color.
+    Each intensity of RGB uses 5 bits:
+    GGGRRRRR 0BBBBBGG
+    Green color is stored in:
+    * first three bits of first byte
+    * last two bits of second byte
+    First bit of second byte is ignored (always 0)
+    Following are some bit-wise operations extracting this data.
+    """
+    palettes = []
+    byteSeq = processData(byteSeq)
+    for i in xrange(0, lenPalette, 2):
+        # two bytes, denoted as a and b
+        a, b = byteSeq[i: i + 2]
+        R = a & 0b00011111
+        G = (a >> 0b101) + (b & 0b00000011) * 0b1000
+        B = b >> 0b10
+        palettes.append([R, G, B])
+    return palettes

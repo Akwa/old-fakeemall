@@ -74,3 +74,14 @@ class PokemonContainer(object):
 
             # *** TM/HM flags ***
             self.pokemon[i].tms = processTms(byteSeq[0x18:0x20])
+
+    def extractPalettes(self, data):
+        """
+        Extracts the palettes data. You can read info about extracting
+        palettes at helpingFunctions.processPalettes
+        """
+        for i in xrange(maxPokemon):
+            j = i * lenPalette
+            # byteSeq is the 8-byte sequence of single palette data.
+            byteSeq = data[j:j + lenPalette]
+            self.pokemon[i].palettes = processPalettes(byteSeq)

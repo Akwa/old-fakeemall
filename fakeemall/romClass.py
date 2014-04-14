@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from constants import *
 from pokemonClass import *
+from moveClass import *
 from helpingFunctions import *
 from re import match
 
@@ -100,7 +101,10 @@ class Rom(object):
                           'Silver': 0x1B1574,
                           'Crystal': 0x1C9F29
                           }.get(self.version)
-        movenamesEnd = movenamesStart + maxMoves * lenMovename
+        movenamesEnd = {'Gold': movenamesStart + maxMoves * lenMovename,
+                        'Silver': movenamesStart + maxMoves * lenMovename,
+                        'Crystal': 0x1CA896
+                        }.get(self.version)
         self.pntMovenames = (movenamesStart, movenamesEnd)
 
         # Moves TM data index bounds
@@ -134,6 +138,8 @@ class Rom(object):
         self.pokemon.extractPalettes(self.dataPalettes)
         self.pokemon.extractEvomoves(self.dataEvomoves,
                                      self.pntEvomoves[0])
+        self.move = MoveContainer()
+        self.move.extractMovenames(self.dataMovenames)
 
     def overwriteRom(self):
         """

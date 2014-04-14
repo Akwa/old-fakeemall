@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from constants import *
 from pokemonClass import *
+from helpingFunctions import *
 from re import match
 
 class Rom(object):
@@ -55,11 +56,11 @@ class Rom(object):
         for particular data blocks.
         """
         # Evolution and moveset index bounds
-        evomovesStart = {'Gold': 0x42790,
-                         'Silver': 0x42790,
-                         'Crystal': 0x42584
+        evomovesStart = {'Gold': 0x427BD,
+                         'Silver': 0x427BD,
+                         'Crystal': 0x425B1
                          }.get(self.version)
-        evomovesEnd = 0x44000  # Reserving the tail of bank
+        evomovesEnd = bankEnd(evomovesStart)  # Reserving rest of bank
         self.pntEvomoves = (evomovesStart, evomovesEnd)
 
         # Base stats index bounds
@@ -131,6 +132,8 @@ class Rom(object):
         self.pokemon.extractNames(self.dataNames)
         self.pokemon.extractBasestats(self.dataBasestats)
         self.pokemon.extractPalettes(self.dataPalettes)
+        self.pokemon.extractEvomoves(self.dataEvomoves,
+                                     self.pntEvomoves[0])
 
     def overwriteRom(self):
         """

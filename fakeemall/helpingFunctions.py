@@ -1,10 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from constants import *
+from struct import unpack
 
 """
 Helping functions
 """
+
+def bankEnd(offset):
+    return offset + lenBank - offset % lenBank
 
 def hexToDec(x):
     """
@@ -33,11 +37,11 @@ def processData(byteSeq):
     Eg. input '\x00\x00' (normal-normal type) outputs [0, 0].
     Other example, Celebi basestats:
     '\x64\x64\x64\x64\x64\x64' or 'dddddd'
-    map(ord, 'dddddd') = [100, 100, 100, 100, 100, 100]
+    [ord(item) for item in 'dddddd'] = [100, 100, 100, 100, 100, 100]
     """
     if len(byteSeq) == 1:
         return ord(byteSeq)
-    return map(ord, byteSeq)
+    return [ord(item) for item in byteSeq]
 
 def processEggGroup(byteSeq):
     """
@@ -45,7 +49,7 @@ def processEggGroup(byteSeq):
     Changes int type input to nice, two-int egg-group list.
     """
     byteSeq = processData(byteSeq)
-    return map(hexToDec, '%x' % byteSeq)
+    return [hexToDec(item) for item in '%x' % byteSeq]
 
 def processTms(byteSeq):
     """
@@ -62,7 +66,7 @@ def processTms(byteSeq):
         # extra zeros have to be added if less than 8 digits
         tmByte = format(tmByte, '#010b')[:1:-1]
         # str to list (eg. '00001111' to [0, 0, 0, 0, 1, 1, 1, 1])
-        tmByte = map(int, tmByte)
+        tmByte = [int(item) for item in tmByte]
         tms.extend(tmByte)
     return tms
 
@@ -91,3 +95,8 @@ def processPalettes(byteSeq):
         B = b >> 0b10
         palettes.append([R, G, B])
     return palettes
+
+def processPointer(byteSeq, minus):
+    """
+    """
+    return unpack('<H', byteSeq)[0] - minus

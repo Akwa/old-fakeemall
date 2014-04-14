@@ -10,8 +10,11 @@ lenPalette = 8
 lenName = 10
 lenMovename = 10
 lenTm = 1
+lenPointer = 2
+lenBank = 0x4000
 
 bitsPerByte = 8
+evoLengths = {'\x01': 3, '\x02': 3, '\x03': 3, '\x04': 3, '\x05': 4}
 
 alph = {
 "\x50": "@",

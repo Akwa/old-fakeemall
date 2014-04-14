@@ -5,7 +5,11 @@ from helpingFunctions import *
 import random
 
 class Pokemon(object):
-    pass
+
+    def __init__(self):
+        self.evos = []
+        self.prevos = []
+        self.moves = {}
 
 class PokemonContainer(object):
 
@@ -80,3 +84,30 @@ class PokemonContainer(object):
             # byteSeq is the 8-byte sequence of single palette data.
             byteSeq = data[j:j + lenPalette]
             self.pokemon[i].palettes = processPalettes(byteSeq)
+
+
+    def extractEvomoves(self, data, dataStart):
+        """
+        Extracts evolution and movesets data along with pointers.
+        First 502 bytes (2*maxPokemon) are expected to be pointers.
+        dataStart is needed as a reference to know where the pointers
+        point.
+        """
+        dataStart = dataStart % lenBank + lenBank
+        for i in xrange(maxPokemon):
+            j = i * 2
+            byteSeq = data[j:j + lenPointer]
+            self.pokemon[i].pointer = processPointer(byteSeq, dataStart)
+            k = self.pokemon[i].pointer
+            while data[k] != '\x00':
+                evoLength = evoLengths[data[k]]
+                evoData = [ord(item) for item in data[k:k + evoLength]]
+                evoData[-1] -= 1
+                self.pokemon[i].evos.append(evoData)
+                self.pokemon[evoData[-1]].prevos.append(i)
+                k += evoLength
+            k += 1
+            while data[k] != '\x00':
+                level, move = [ord(item) for item in data[k:k + 2]]
+                self.pokemon[i].moves.setdefault(level, []).append(move)
+                k += 2

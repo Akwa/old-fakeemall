@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 from constants import *
 from helpingFunctions import *
-import random
 
 class Pokemon(object):
 
@@ -111,3 +110,31 @@ class PokemonContainer(object):
                 level, move = [ord(item) for item in data[k:k + 2]]
                 self.pokemon[i].moves.setdefault(level, []).append(move)
                 k += 2
+
+    def updateNames(self):
+        """
+        Packs all the names into 10-byte long sequences.
+        """
+        data = []
+        for i in xrange(maxPokemon):
+            name = self.pokemon[i].name
+            data.append(nameRev(name).ljust(10, '\x50'))
+        return ''.join(data)
+
+    def updateBasestats(self):
+        """
+        """
+        data = []
+        for i in xrange(maxPokemon):
+            data.append(packBasestats(self.pokemon[i], i))
+        return ''.join(data)
+
+    def updatePalettes(self):
+        """
+        """
+        pass
+
+    def updateEvomoves(self):
+        """
+        """
+        pass

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from constants import *
-from struct import unpack
+from struct import pack, unpack
 
 """
 Helping functions
@@ -9,12 +9,6 @@ Helping functions
 
 def bankEnd(offset):
     return offset + lenBank - offset % lenBank
-
-def hexToDec(x):
-    """
-    Simply an int() function with closed second arg.
-    """
-    return int(x, 16)
 
 def processName(byteSeq):
     """
@@ -49,7 +43,7 @@ def processEggGroup(byteSeq):
     Changes int type input to nice, two-int egg-group list.
     """
     byteSeq = processData(byteSeq)
-    return [hexToDec(item) for item in '%x' % byteSeq]
+    return [int(item, 16) for item in '%x' % byteSeq]
 
 def processTms(byteSeq):
     """
@@ -96,7 +90,58 @@ def processPalettes(byteSeq):
         palettes.append([R, G, B])
     return palettes
 
-def processPointer(byteSeq, minus):
+def processPointer(byteSeq, minus=0):
     """
+    Reads the little-endian pointer and subtracts optional minus value.
+    Minus value is the starting offset of some data in bank.
+    Eg. Pokemon evomoves data starts at 0x425B1 in Crystal.
+    0x25B1 must be subtracted from the all evomove pointers to find
+    the relative position of place being pointed to by pointer.
+    Bulbasaur pointer is A767.
+    0x67A7 - 0x4000 - 0x25b1 = 0x1F6 = 502
+    502 points to first index after all 251 pointers.
     """
     return unpack('<H', byteSeq)[0] - minus
+
+def nameRev(name):
+    return ''.join((alphRev[char] for char in name))
+
+def packBasestats(pokemon, i):
+    stats = [i + 1]  # Pokemon are numbered from 1, not 0
+    stats.extend(pokemon.stats)
+    stats.extend(pokemon.types)
+    stats.append(pokemon.catchRate)
+    stats.append(pokemon.expYield)
+    stats.extend(pokemon.wildHeldItems)
+    stats.append(pokemon.genderRatio)
+    stats.append(0x64)  # "unknown"
+    stats.append(pokemon.eggCycles)
+    stats.append(0x5)  # "unknown"
+    stats.append(pokemon.dimensions)
+    stats.extend((0, 0, 0, 0))
+    stats.append(pokemon.growthRate)
+    stats.append(packEggGroup(pokemon.eggGroups))
+    stats.extend(packTms(pokemon.tms))
+    return ''.join((chr(i) for i in stats))
+
+def packEggGroup(eggGroup):
+    return int(''.join((hex(i)[2:] for i in eggGroup)), 16)
+
+def packTms(tms):
+    data = []
+    for i in xrange(0, 64, 8):  # magic numbers to be changed
+        byte = ''.join(str(i) for i in reversed(tms[i:i + 8]))
+        byte = int(byte, 2)
+        data.append(byte)
+    return data
+
+def packMoves(move):
+    stats = []
+    stats.append(move.animation)
+    stats.append(move.effect)
+    stats.append(move.power)
+    stats.append(move.type)
+    stats.append(move.accuracy)
+    stats.append(move.pp)
+    stats.append(move.effectChance)
+    return ''.join((chr(i) for i in stats))

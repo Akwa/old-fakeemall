@@ -158,6 +158,13 @@ class Rom(object):
         This function extracts new random data from classes and updates
         the 'self.data*' attr with data converted to "byte sequence".
         """
+        self.dataNames = self.pokemon.updateNames()
+        self.dataBasestats = self.pokemon.updateBasestats()
+        self.dataPalettes = self.pokemon.updatePalettes()
+        self.dataEvomoves = self.pokemon.updateEvomoves()
+        self.dataMovenames = self.move.updateMovenames()
+        self.dataMoves = self.move.updateMoves()
+        self.dataTms = self.move.updateTms()
         pass
 
     def assemblyData(self):

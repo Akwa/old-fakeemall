@@ -66,3 +66,28 @@ class MoveContainer(object):
         In crystal, first 3 of last 4 bytes are Move Tutor moves.
         """
         self.tmData = processData(data)
+
+    def updateMovenames(self):
+        """
+        Packs the names into sequence of bytes.
+        """
+        data = []
+        for i in xrange(maxMoves):
+            data.append(nameRev(self.moves[i].name))
+        data.append('')  # so the data ends with '\x50'
+        return '\x50'.join(data)
+
+    def updateMoves(self):
+        """
+        Packs all the move stats into sequence of bytes.
+        """
+        data = []
+        for i in xrange(maxMoves):
+            data.append(packMoves(self.moves[i]))
+        return ''.join(data)
+
+    def updateTms(self):
+        """
+        Returns 61 bytes of tm data, each byte denoting one tm.
+        """
+        return ''.join((chr(i) for i in self.tmData))

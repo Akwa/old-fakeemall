@@ -106,3 +106,5 @@ alph = {
 "\xfe": "8",
 "\xff": "9"
 }
+
+alphRev = {val: key for key, val in alph.items()}  # reverse alphabet

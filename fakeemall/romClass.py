@@ -141,6 +141,7 @@ class Rom(object):
         self.move = MoveContainer()
         self.move.extractMovenames(self.dataMovenames)
         self.move.extractMoves(self.dataMoves)
+        self.move.extractTms(self.dataTms)
 
     def overwriteRom(self):
         """

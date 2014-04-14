@@ -13,7 +13,7 @@ class MoveContainer(object):
 
     def __getitem__(self, item):
         return self.moves[item]
-    
+
     def extractMovenames(self, data):
         """
         Extracts move names from bytecode.
@@ -57,5 +57,12 @@ class MoveContainer(object):
             self.moves[i].accuracy = byteSeq[4]
             self.moves[i].pp = byteSeq[5]
             self.moves[i].effectChance = byteSeq[6]
-            
-        
+
+    def extractTms(self, data):
+        """
+        Extracts TM data - which TM responds to which move.
+        First 50 entries are TMs 01 - 50, then 7 HMs.
+        In Gold/Silver, last 4 bytes are empty.
+        In crystal, first 3 of last 4 bytes are Move Tutor moves.
+        """
+        self.tmData = processData(data)

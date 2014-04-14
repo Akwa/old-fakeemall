@@ -140,6 +140,7 @@ class Rom(object):
                                      self.pntEvomoves[0])
         self.move = MoveContainer()
         self.move.extractMovenames(self.dataMovenames)
+        self.move.extractMoves(self.dataMoves)
 
     def overwriteRom(self):
         """

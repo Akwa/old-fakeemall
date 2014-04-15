@@ -1,5 +1,7 @@
 # precompiled python code
 *.pyc
 
-# roms
+# roms and savefiles
 *.gbc
+*.sgm
+*.sav

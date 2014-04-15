@@ -7,8 +7,9 @@ class Pokemon(object):
 
     def __init__(self):
         self.evos = []
-        self.prevos = []
+        self.prevos = []  # list = more than 1 parent possible
         self.moves = []
+        self.familyLen = 0
 
 class PokemonContainer(object):
 
@@ -110,6 +111,45 @@ class PokemonContainer(object):
                 level, move = [ord(item) for item in data[k:k + 2]]
                 self.pokemon[i].moves.append([level, move])
                 k += 2
+        self.depthSearch()
+
+    def depthSearch(self):
+        """
+        Counts the length of each evolutionary line, finds the "parents"
+        (first forms).
+        An important but hopefully unnecessary assumption is no cyclic
+        families and that each evolutionary line in each family has same
+        length.
+        """
+        for i in xrange(maxPokemon):
+            if not self.pokemon[i].prevos:
+                self.depthSearchVisit(i, 0)
+
+    def depthSearchVisit(self, i, stage):
+        """
+        Visits next Pokemon in evolutionary line.
+        Increments "stage" attribute
+        """
+        newStage = stage + 1
+        self.pokemon[i].stage = newStage
+        if self.pokemon[i].evos:
+            for evo in self.pokemon[i].evos:
+                j = evo[-1]
+                self.depthSearchVisit(j, newStage)
+        else:
+            self.backwardsVisit(i, newStage)
+
+    def backwardsVisit(self, i, stage):
+        """
+        Visits preceding Pokemon in evolutionary line.
+        Gives information of family length back to the top.
+        """
+        self.pokemon[i].familyLen = stage
+        for parent in self.pokemon[i].prevos:
+            # Let's assume for future than one day someone makes
+            # evolutionary family where 2 predecessors are possible.
+            if not self.pokemon[parent].familyLen:
+                self.backwardsVisit(parent, stage)
 
     def updateNames(self):
         """

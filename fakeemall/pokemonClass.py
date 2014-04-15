@@ -8,7 +8,7 @@ class Pokemon(object):
     def __init__(self):
         self.evos = []
         self.prevos = []
-        self.moves = {}
+        self.moves = []
 
 class PokemonContainer(object):
 
@@ -85,18 +85,18 @@ class PokemonContainer(object):
             self.pokemon[i].palettes = processPalettes(byteSeq)
 
 
-    def extractEvomoves(self, data, dataStart):
+    def extractEvomoves(self, data, evoStart):
         """
         Extracts evolution and movesets data along with pointers.
         First 502 bytes (2*maxPokemon) are expected to be pointers.
         dataStart is needed as a reference to know where the pointers
         point.
         """
-        dataStart = dataStart % lenBank + lenBank
+        self.evoStart = evoStart % lenBank
         for i in xrange(maxPokemon):
             j = i * 2
             byteSeq = data[j:j + lenPointer]
-            self.pokemon[i].pointer = processPointer(byteSeq, dataStart)
+            self.pokemon[i].pointer = processPointer(byteSeq, self.evoStart)
             k = self.pokemon[i].pointer
             while data[k] != '\x00':
                 evoLength = evoLengths[data[k]]
@@ -108,7 +108,7 @@ class PokemonContainer(object):
             k += 1
             while data[k] != '\x00':
                 level, move = [ord(item) for item in data[k:k + 2]]
-                self.pokemon[i].moves.setdefault(level, []).append(move)
+                self.pokemon[i].moves.append([level, move])
                 k += 2
 
     def updateNames(self):
@@ -131,10 +131,28 @@ class PokemonContainer(object):
 
     def updatePalettes(self):
         """
+        Packs the 3 color intensities into two bytes.
+        Each color is defined by 5 bits plus there's one empty bit.
         """
-        pass
+        data = []
+        for i in xrange(maxPokemon):
+            data.append(packPalettes(self.pokemon[i].palettes))
+        return ''.join(data)
 
-    def updateEvomoves(self):
+    def updateEvomoves(self, start, end):
         """
         """
-        pass
+        totalLength = end - start
+        evoData = []
+        data = []
+        lenData = self.evoStart + lenPointer * maxPokemon
+        for i in xrange(maxPokemon):
+            evoData.append(makePointer(lenData))
+            evomoves, lenEvomoves = packEvomoves(self.pokemon[i].evos,
+                                                 self.pokemon[i].moves)
+            lenData += lenEvomoves
+            data.append(evomoves)
+        evoData.extend(data)
+        evoData = ''.join((''.join(item) for item in evoData))
+        evoData = evoData.ljust(totalLength, '\x00')
+        return evoData

@@ -161,7 +161,7 @@ class Rom(object):
         self.dataNames = self.pokemon.updateNames()
         self.dataBasestats = self.pokemon.updateBasestats()
         self.dataPalettes = self.pokemon.updatePalettes()
-        self.dataEvomoves = self.pokemon.updateEvomoves()
+        self.dataEvomoves = self.pokemon.updateEvomoves(*self.pntEvomoves)
         self.dataMovenames = self.move.updateMovenames()
         self.dataMoves = self.move.updateMoves()
         self.dataTms = self.move.updateTms()

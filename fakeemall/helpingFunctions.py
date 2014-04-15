@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from constants import *
 from struct import pack, unpack
+from itertools import izip
 
 """
 Helping functions
@@ -101,7 +102,7 @@ def processPointer(byteSeq, minus=0):
     0x67A7 - 0x4000 - 0x25b1 = 0x1F6 = 502
     502 points to first index after all 251 pointers.
     """
-    return unpack('<H', byteSeq)[0] - minus
+    return unpack('<H', byteSeq)[0] - lenBank - minus
 
 def nameRev(name):
     return ''.join((alphRev[char] for char in name))
@@ -145,3 +146,29 @@ def packMoves(move):
     stats.append(move.pp)
     stats.append(move.effectChance)
     return ''.join((chr(i) for i in stats))
+
+def packPalettes(palette):
+    data = []
+    for r, g, b in palette:  # four palettes, two normal/two shiny
+        a = chr(12 + (g & 0b00111) * 0b100000)
+        b = chr((g >> 3) + b * 0b100)
+        data.append(''.join((a, b)))
+    return ''.join(data)
+
+def makePointer(address):
+    return pack('<H', address + lenBank)
+
+def packEvomoves(evos, moves):
+    data = []
+    lenData = 0
+    for evo in evos:
+        evo[-1] += 1  # indexing starts from 1 not 0
+        data.append(''.join([chr(item) for item in evo]))
+        lenData += len(evo)
+    data.append('\x00')
+    for move in moves:
+        data.append(''.join([chr(item) for item in move]))
+        lenData += 2
+    data.append('\x00')
+    lenData += 2
+    return data, lenData

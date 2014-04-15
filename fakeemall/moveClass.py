@@ -67,15 +67,16 @@ class MoveContainer(object):
         """
         self.tmData = processData(data)
 
-    def updateMovenames(self):
+    def updateMovenames(self, start, end):
         """
         Packs the names into sequence of bytes.
         """
+        totalLength = end - start
         data = []
         for i in xrange(maxMoves):
             data.append(nameRev(self.moves[i].name))
         data.append('')  # so the data ends with '\x50'
-        return '\x50'.join(data)
+        return '\x50'.join(data).ljust(totalLength, '\x00')
 
     def updateMoves(self):
         """

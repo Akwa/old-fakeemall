@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 from constants import *
 from struct import pack, unpack
-from itertools import izip
 
 """
 Helping functions
@@ -149,7 +148,7 @@ def packMoves(move):
 
 def packPalettes(palette):
     data = []
-    for r, g, b in palette:  # four palettes, two normal/two shiny
+    for R, G, B in palette:  # four palettes, two normal/two shiny
         a = chr(R + (G & 0b00111) * 0b100000)
         b = chr((G >> 3) + B * 0b100)
         data.append(''.join((a, b)))

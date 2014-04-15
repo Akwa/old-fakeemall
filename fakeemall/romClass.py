@@ -162,10 +162,9 @@ class Rom(object):
         self.dataBasestats = self.pokemon.updateBasestats()
         self.dataPalettes = self.pokemon.updatePalettes()
         self.dataEvomoves = self.pokemon.updateEvomoves(*self.pntEvomoves)
-        self.dataMovenames = self.move.updateMovenames()
+        self.dataMovenames = self.move.updateMovenames(*self.pntMovenames)
         self.dataMoves = self.move.updateMoves()
         self.dataTms = self.move.updateTms()
-        pass
 
     def assemblyData(self):
         """

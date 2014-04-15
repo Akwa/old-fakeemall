@@ -150,8 +150,8 @@ def packMoves(move):
 def packPalettes(palette):
     data = []
     for r, g, b in palette:  # four palettes, two normal/two shiny
-        a = chr(12 + (g & 0b00111) * 0b100000)
-        b = chr((g >> 3) + b * 0b100)
+        a = chr(R + (G & 0b00111) * 0b100000)
+        b = chr((G >> 3) + B * 0b100)
         data.append(''.join((a, b)))
     return ''.join(data)
 

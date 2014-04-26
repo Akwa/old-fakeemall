@@ -1,0 +1,3 @@
+[submodule "pygsc"]
+	path = pygsc
+	url = git://github.com/Akwa/pygsc.git
